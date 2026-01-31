@@ -33,7 +33,7 @@ const payload = {
   aps: {
     alert: {
       title: 'Alog 복약 알림',
-      body: '약 먹었나요? 오늘 복약 여부를 기록해주세요!',
+      body: '오늘 복약 여부를 기록하면 나의 기록 리포트를 채울 수 있어요!',
     },
     sound: 'default',
     badge: 1,

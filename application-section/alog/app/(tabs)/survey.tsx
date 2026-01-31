@@ -53,6 +53,9 @@ export default function SurveyScreen() {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
         <Header />
+        <View style={styles.tooltip}>
+          <Text style={styles.tooltipText}>ⓘ 주간 증상 흐름을 정확하게 기록하기 위해 질문은 요일마다 달라집니다.</Text>
+        </View>
         <View style={styles.completedContainer}>
           <Card style={styles.completedCard}>
             <Text style={styles.completedIcon}>&#10003;</Text>
@@ -77,6 +80,9 @@ export default function SurveyScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <Header />
+      <View style={styles.tooltip}>
+        <Text style={styles.tooltipText}>ⓘ 주간 증상 흐름을 정확하게 기록하기 위해 질문은 요일마다 달라집니다.</Text>
+      </View>
       <View style={styles.content}>
         <SurveyProgress current={currentIndex + 1} total={totalQuestions} />
 
@@ -150,5 +156,16 @@ const styles = StyleSheet.create({
   retryButton: {
     marginTop: Spacing.xl,
     minWidth: 160,
+  },
+  tooltip: {
+    backgroundColor: Colors.primaryLight,
+    marginHorizontal: Spacing.lg,
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.sm,
+    borderRadius: 8,
+  },
+  tooltipText: {
+    ...Typography.caption,
+    color: Colors.primarySoft,
   },
 });

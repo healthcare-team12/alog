@@ -48,7 +48,7 @@ export async function scheduleMorningNotification(hour: number, minute: number):
     const id = await Notifications.scheduleNotificationAsync({
       content: {
         title: 'Alog 복약 알림',
-        body: '오늘 복약 여부를 남기면 나의 기록 리포트를 채울 수 있어요!',
+        body: '오늘 복약 여부를 기록하면 나의 기록 리포트를 채울 수 있어요!',
         sound: true,
       },
       trigger: {
@@ -88,7 +88,7 @@ export async function sendTestMedicationNotification(): Promise<string | null> {
     const id = await Notifications.scheduleNotificationAsync({
       content: {
         title: 'Alog 복약 알림',
-        body: '오늘 복약 여부를 남기면 나의 기록 리포트를 채울 수 있어요!',
+        body: '오늘 복약 여부를 기록하면 나의 기록 리포트를 채울 수 있어요!',
         sound: true,
       },
       trigger: {

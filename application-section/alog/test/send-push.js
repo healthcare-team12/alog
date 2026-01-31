@@ -22,7 +22,7 @@ const EXPO_PUSH_URL = 'https://exp.host/--/api/v2/push/send';
 const PRESETS = {
   medication: {
     title: 'Alog 복약 알림',
-    body: '오늘 복약 여부를 남기면 나의 기록 리포트를 채울 수 있어요!',
+    body: '오늘 복약 여부를 기록하면 나의 기록 리포트를 채울 수 있어요!',
   },
   survey: {
     title: 'Alog 설문 알림',

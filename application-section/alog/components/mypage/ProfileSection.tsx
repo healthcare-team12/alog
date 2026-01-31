@@ -16,6 +16,7 @@ export function ProfileSection({ nickname }: ProfileSectionProps) {
         <Ionicons name="person" size={32} color={Colors.primaryFaded} />
       </View>
       <Text style={styles.nickname}>{nickname}님</Text>
+      <Text style={styles.patientId}>A20250001</Text>
       <Text style={styles.subtitle}>꾸준히 기록하고 있어요</Text>
     </View>
   );
@@ -38,6 +39,11 @@ const styles = StyleSheet.create({
   nickname: {
     ...Typography.h2,
     color: Colors.textPrimary,
+  },
+  patientId: {
+    ...Typography.body2,
+    color: Colors.textSecondary,
+    marginTop: Spacing.xs,
   },
   subtitle: {
     ...Typography.body2,

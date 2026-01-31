@@ -84,6 +84,15 @@ export const MEDICATION_CHARACTERISTICS = [
   },
 ];
 
+// 리포트 탭 - 메트릭 카드 데이터
+export const METRIC_COMPLETION_RATE = {
+  rate: 71,
+};
+
+export const METRIC_TREND = {
+  peakLabel: '주의력',
+};
+
 // 마이 페이지 - 프로필
 export const USER_PROFILE = {
   nickname: '민수',
