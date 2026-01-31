@@ -10,6 +10,8 @@ lerna-debug.log*
 node_modules
 dist
 clinic.db
+clinic.db-shm
+clinic.db-wal
 dist-ssr
 *.local
 
