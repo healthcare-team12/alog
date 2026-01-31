@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useRef, useCallback } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFocusEffect } from 'expo-router';
 import { Header } from '../../components/common/Header';
 import { Card } from '../../components/common/Card';
 import { SymptomLineGraph } from '../../components/report/SymptomLineGraph';
@@ -14,10 +15,18 @@ import { Typography } from '../../constants/typography';
 import { Spacing } from '../../constants/spacing';
 
 export default function ReportScreen() {
+  const scrollRef = useRef<ScrollView>(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      scrollRef.current?.scrollTo({ y: 0, animated: false });
+    }, [])
+  );
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <Header />
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView ref={scrollRef} style={styles.scroll} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <Text style={styles.title}>주간 리포트</Text>
         <Text style={styles.subtitle}>1월 27일 ~ 2월 2일</Text>
 
@@ -45,8 +54,8 @@ export default function ReportScreen() {
         </Card>
 
         <Card style={styles.section}>
-          <Text style={styles.sectionTitle}>현재 복용중인 약</Text>
-          <Text style={styles.medName}>콘서타 OROS</Text>
+          <Text style={styles.medName}>현재 복용중인 약</Text>
+          <Text style={styles.sectionTitle}>콘서타 OROS</Text>
           <View style={styles.charRow}>
             {MEDICATION_CHARACTERISTICS.map((char) => (
               <MedicationCharCard key={char.title} title={char.title} items={char.items} />
@@ -100,7 +109,7 @@ const styles = StyleSheet.create({
   medName: {
     ...Typography.body2,
     color: Colors.textSecondary,
-    marginBottom: Spacing.md,
+    marginBottom: Spacing.xs,
   },
   insightText: {
     ...Typography.body2,

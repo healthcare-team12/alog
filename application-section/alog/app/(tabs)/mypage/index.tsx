@@ -1,5 +1,5 @@
-import React, { useCallback } from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { View, Text, ScrollView, StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useFocusEffect } from 'expo-router';
@@ -9,8 +9,10 @@ import { ProfileSection } from '../../../components/mypage/ProfileSection';
 import { MedicationListCard } from '../../../components/mypage/MedicationListCard';
 import { useMedications } from '../../../hooks/useMedications';
 import { Button } from '../../../components/common/Button';
-import { sendTestMedicationNotification } from '../../../utils/notifications';
-import { USER_PROFILE, NOTIFICATION_TIMES } from '../../../constants/mockData';
+import { TimePickerSpinnerModal } from '../../../components/common/TimePickerSpinnerModal';
+import { getNotificationSettings, saveNotificationSettings } from '../../../utils/storage';
+import { rescheduleNotifications } from '../../../utils/notifications';
+import { USER_PROFILE } from '../../../constants/mockData';
 import { Colors } from '../../../constants/colors';
 import { Typography } from '../../../constants/typography';
 import { Spacing } from '../../../constants/spacing';
@@ -18,15 +20,35 @@ import { Spacing } from '../../../constants/spacing';
 export default function MyPageScreen() {
   const router = useRouter();
   const { medications, loading, refresh } = useMedications();
+  const [morningTime, setMorningTime] = useState('08:00');
+  const [afternoonTime, setAfternoonTime] = useState('18:00');
+  const [pickerVisible, setPickerVisible] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
       refresh();
+      getNotificationSettings().then((settings) => {
+        setMorningTime(settings.morningTime);
+        setAfternoonTime(settings.afternoonTime);
+      });
     }, [refresh])
   );
 
   const handleEditPress = (id: string) => {
     router.push({ pathname: '/(tabs)/mypage/medication-edit', params: { id } });
+  };
+
+  const handleTimeConfirm = async (newMorning: string, newAfternoon: string) => {
+    await saveNotificationSettings({
+      morningTime: newMorning,
+      afternoonTime: newAfternoon,
+      enabled: true,
+    });
+    await rescheduleNotifications(newMorning, newAfternoon);
+    setMorningTime(newMorning);
+    setAfternoonTime(newAfternoon);
+    setPickerVisible(false);
+    Alert.alert('저장 완료', '알림 시간이 변경되었습니다.');
   };
 
   return (
@@ -41,19 +63,27 @@ export default function MyPageScreen() {
           <Text style={styles.sectionTitle}>알림 시간</Text>
           <View style={styles.notifRow}>
             <Text style={styles.notifLabel}>복용 알림</Text>
-            <Text style={styles.notifTime}>{NOTIFICATION_TIMES.morningTime}</Text>
+            <Text style={styles.notifTime}>{morningTime}</Text>
           </View>
           <View style={styles.notifRow}>
             <Text style={styles.notifLabel}>설문 알림</Text>
-            <Text style={styles.notifTime}>{NOTIFICATION_TIMES.afternoonTime}</Text>
+            <Text style={styles.notifTime}>{afternoonTime}</Text>
           </View>
           <Button
             title="수정하기"
-            onPress={() => sendTestMedicationNotification()}
+            onPress={() => setPickerVisible(true)}
             variant="secondary"
-            style={styles.testButton}
+            style={styles.editButton}
           />
         </Card>
+
+        <TimePickerSpinnerModal
+          visible={pickerVisible}
+          morningTime={morningTime}
+          afternoonTime={afternoonTime}
+          onConfirm={handleTimeConfirm}
+          onCancel={() => setPickerVisible(false)}
+        />
 
         <Card style={styles.section}>
           <Text style={styles.sectionTitle}>정보</Text>
@@ -108,7 +138,7 @@ const styles = StyleSheet.create({
     color: Colors.textPrimary,
     fontWeight: '600',
   },
-  testButton: {
+  editButton: {
     marginTop: Spacing.md,
   },
   infoText: {

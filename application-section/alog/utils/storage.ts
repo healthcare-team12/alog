@@ -7,6 +7,7 @@ const KEYS = {
   MEDICATION_RECORDS: '@alog/medication_records',
   SURVEY_RESPONSES: '@alog/survey_responses',
   INITIALIZED: '@alog/initialized',
+  NOTIFICATION_SETTINGS: '@alog/notification_settings',
 };
 
 // --- Medications ---
@@ -85,6 +86,29 @@ export async function getDayRecordStatus(date: string): Promise<'complete' | 'pa
   if (medRecorded && surveyComplete) return 'complete';
   if (medRecorded || surveyComplete) return 'partial';
   return 'incomplete';
+}
+
+// --- Notification Settings ---
+
+export interface NotificationSettings {
+  morningTime: string;
+  afternoonTime: string;
+  enabled: boolean;
+}
+
+const DEFAULT_NOTIFICATION_SETTINGS: NotificationSettings = {
+  morningTime: '08:00',
+  afternoonTime: '18:00',
+  enabled: true,
+};
+
+export async function getNotificationSettings(): Promise<NotificationSettings> {
+  const data = await AsyncStorage.getItem(KEYS.NOTIFICATION_SETTINGS);
+  return data ? JSON.parse(data) : DEFAULT_NOTIFICATION_SETTINGS;
+}
+
+export async function saveNotificationSettings(settings: NotificationSettings): Promise<void> {
+  await AsyncStorage.setItem(KEYS.NOTIFICATION_SETTINGS, JSON.stringify(settings));
 }
 
 export function getTodayDateString(): string {

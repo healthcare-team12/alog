@@ -105,3 +105,11 @@ export async function sendTestMedicationNotification(): Promise<string | null> {
 export async function cancelAllNotifications(): Promise<void> {
   await Notifications.cancelAllScheduledNotificationsAsync();
 }
+
+export async function rescheduleNotifications(morningTime: string, afternoonTime: string): Promise<void> {
+  const [mHour, mMinute] = morningTime.split(':').map(Number);
+  const [aHour, aMinute] = afternoonTime.split(':').map(Number);
+  await cancelAllNotifications();
+  await scheduleMorningNotification(mHour, mMinute);
+  await scheduleAfternoonNotification(aHour, aMinute);
+}

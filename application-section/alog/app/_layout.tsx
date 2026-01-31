@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { DeviceEventEmitter } from 'react-native';
@@ -8,8 +8,13 @@ import { MedicationPopup } from '../components/common/MedicationPopup';
 import { getMedicationRecord, saveMedicationRecord, getTodayDateString } from '../utils/storage';
 
 export default function RootLayout() {
+  const router = useRouter();
+
   useNotifications({
-    onMedicationNotificationTap: () => setShowPopup(true),
+    onMedicationNotificationTap: () => {
+      router.replace('/(tabs)/today');
+      setShowPopup(true);
+    },
   });
 
   const [showPopup, setShowPopup] = useState(false);

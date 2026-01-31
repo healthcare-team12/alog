@@ -7,6 +7,7 @@ import {
   scheduleAfternoonNotification,
   cancelAllNotifications,
 } from '../utils/notifications';
+import { getNotificationSettings } from '../utils/storage';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -31,9 +32,12 @@ export function useNotifications(options?: UseNotificationsOptions) {
     async function setup() {
       const granted = await requestNotificationPermissions();
       if (granted) {
+        const settings = await getNotificationSettings();
+        const [mHour, mMinute] = settings.morningTime.split(':').map(Number);
+        const [aHour, aMinute] = settings.afternoonTime.split(':').map(Number);
         await cancelAllNotifications();
-        await scheduleMorningNotification(8, 0);
-        await scheduleAfternoonNotification(18, 0);
+        await scheduleMorningNotification(mHour, mMinute);
+        await scheduleAfternoonNotification(aHour, aMinute);
         await getExpoPushToken();
       }
     }
